@@ -1,0 +1,9 @@
+---
+description: Java domain and test rules
+globs: src/**/*.java
+alwaysApply: false
+---
+
+Put business rules in entity methods, not in controllers.
+Use an enum for a fixed set of states.
+Every behavior change gets a JUnit test.
