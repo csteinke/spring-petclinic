@@ -22,6 +22,8 @@ import org.springframework.samples.petclinic.model.BaseEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -44,6 +46,10 @@ public class Visit extends BaseEntity {
 	@Size(max = 255)
 	private String description;
 
+	@Enumerated(EnumType.STRING)
+	@Column(name = "status", nullable = false, length = 20)
+	private VisitStatus status = VisitStatus.SCHEDULED;
+
 	/**
 	 * Creates a new instance of Visit for tomorrow
 	 */
@@ -65,6 +71,29 @@ public class Visit extends BaseEntity {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public VisitStatus getStatus() {
+		return this.status;
+	}
+
+	/**
+	 * Change the status. Only a scheduled visit may be completed or cancelled.
+	 * @throws IllegalStateException when the change is not allowed
+	 */
+	public void changeStatus(VisitStatus target) {
+		if (target == null || !this.status.canTransitionTo(target)) {
+			throw new IllegalStateException("Cannot change visit status from " + this.status + " to " + target);
+		}
+		this.status = target;
+	}
+
+	public void complete() {
+		this.changeStatus(VisitStatus.COMPLETED);
+	}
+
+	public void cancel() {
+		this.changeStatus(VisitStatus.CANCELLED);
 	}
 
 }
