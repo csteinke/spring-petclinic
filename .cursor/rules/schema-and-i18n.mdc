@@ -1,0 +1,9 @@
+---
+description: Schema and message file rules
+globs: src/main/resources/**
+alwaysApply: false
+---
+
+Change the H2, MySQL, and Postgres schema files and data files together.
+H2 and MySQL `data.sql` insert visits by position, so add the new value to every visits row.
+Add every new message key to all `messages*.properties` files. A test checks that these files stay in sync.
